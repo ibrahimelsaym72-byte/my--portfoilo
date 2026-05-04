@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ibrahim Elsaym | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --bg-dark: #0a0a0c;
+            --card-bg: #16161d;
+            --text-bright: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-bright); line-height: 1.6; }
+
+        header { height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        header h1 { font-size: 4rem; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        header p { color: var(--text-muted); font-size: 1.2rem; max-width: 600px; }
+
+        .container { width: 90%; max-width: 1100px; margin: 0 auto; }
+
+        /* About Section */
+        .about-card { background: var(--card-bg); padding: 40px; border-radius: 24px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; margin-top: -40px; border: 1px solid rgba(255,255,255,0.05); }
+        .skills-tag { display: inline-block; background: rgba(99, 102, 241, 0.1); color: #818cf8; padding: 6px 15px; border-radius: 10px; margin: 4px; font-size: 0.85rem; border: 1px solid rgba(99, 102, 241, 0.2); }
+
+        /* Portfolio Filter */
+        .filter-buttons { display: flex; justify-content: center; gap: 12px; margin: 60px 0 30px; flex-wrap: wrap; }
+        .filter-btn { background: var(--card-bg); color: white; border: 1px solid #333; padding: 12px 24px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+        .filter-btn.active { background: var(--accent-gradient); border: none; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3); }
+
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .portfolio-item { 
+            background: #000; height: 350px; border-radius: 18px; overflow: hidden; 
+            display: none; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.3s ease;
+        }
+        .portfolio-item.show { display: block; animation: scaleIn 0.4s ease; }
+        .portfolio-item:hover { transform: translateY(-5px); border-color: #6366f1; }
+        .portfolio-item img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+
+        /* --- LIGHTBOX (المسؤول عن التكبير) --- */
+        #lightbox {
+            display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.95); justify-content: center; align-items: center; cursor: zoom-out;
+        }
+        #lightbox.active { display: flex; animation: fadeIn 0.3s; }
+        #lightbox img { max-width: 90%; max-height: 90%; border-radius: 5px; box-shadow: 0 0 30px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.3s ease; }
+        #lightbox.active img { transform: scale(1); }
+        .close-btn { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; }
+
+        /* Contact */
+        .contact-section { background: var(--card-bg); margin: 80px 0; padding: 50px; border-radius: 24px; text-align: center; }
+        .contact-section h2 { margin-bottom: 20px; color: #818cf8; }
+
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 768px) { .about-card { grid-template-columns: 1fr; } header h1 { font-size: 3rem; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Ibrahim Elsaym</h1>
+        <p>Graphic Designer Portfolio</p>
+    </header>
+
+    <div class="container">
+        <div class="about-card">
+            <div>
+                <h3 style="color: #818cf8; margin-bottom: 10px;">About Me</h3>
+                <p style="color: var(--text-muted);">
+                    I am Ibrahim Mahmoud Ibrahim, a dedicated junior graphic designer. I specialize in social media designs, branding, and professional posters. I am constantly learning and improving my skills to deliver high-quality visual results.
+                </p>
+            </div>
+            <div>
+                <h3 style="margin-bottom: 10px;">Tools & Skills</h3>
+                <div class="skills-tag">Adobe Photoshop</div>
+                <div class="skills-tag">Adobe Illustrator</div>
+                <div class="skills-tag">Social Media Ads</div>
+                <div class="skills-tag">Branding</div>
+                <div class="skills-tag">Posters</div>
+                <div class="skills-tag">Prints</div>
+            </div>
+        </div>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterSelection('all')">All Work</button>
+            <button class="filter-btn" onclick="filterSelection('branding')">Branding</button>
+            <button class="filter-btn" onclick="filterSelection('social')">Social Media</button>
+            <button class="filter-btn" onclick="filterSelection('prints')">Prints</button>
+            <button class="filter-btn" onclick="filterSelection('posters')">Posters</button>
+        </div>
+
+        <div class="portfolio-grid">
+            <div class="portfolio-item branding" onclick="openLightbox(this)">
+                <img src="img/branding/fire burger.png" alt="Branding">
+            </div>
+            <div class="portfolio-item social" onclick="openLightbox(this)">
+                <img src="img/social media/smart watch.png" alt="Social Media">
+            </div>
+            <div class="portfolio-item prints" onclick="openLightbox(this)">
+                <img src="img/print1.jpg" alt="Prints">
+            </div>
+            <div class="portfolio-item posters" onclick="openLightbox(this)">
+                <img src="img/posters movie/posters movie.png" alt="Posters">
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <h2>Contact Me</h2>
+            <p style="margin-top: 10px;">Email: ibrahimelsaym72@gmail.com</p>
+            <p>Phone: +20 1120748685</p>
+        </div>
+    </div>
+
+    <div id="lightbox" onclick="this.classList.remove('active')">
+        <span class="close-btn">&times;</span>
+        <img id="lightbox-img" src="">
+    </div>
+
+    <script>
+        // سكريبت الفلترة
+        filterSelection("all");
+        function filterSelection(c) {
+            var x, i;
+            x = document.getElementsByClassName("portfolio-item");
+            if (c == "all") c = "";
+            for (i = 0; i < x.length; i++) {
+                x[i].classList.remove("show");
+                if (x[i].className.indexOf(c) > -1) x[i].classList.add("show");
+            }
+        }
+
+        // سكريبت تلوين أزرار الفلتر
+        var btnContainer = document.querySelector(".filter-buttons");
+        var btns = btnContainer.getElementsByClassName("filter-btn");
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].addEventListener("click", function() {
+                var current = document.getElementsByClassName("active");
+                current[0].className = current[0].className.replace(" active", "");
+                this.className += " active";
+            });
+        }
+
+        // --- الجزء المسؤول عن تكبير الصور (Lightbox) ---
+        function openLightbox(element) {
+            // بياخد رابط الصورة من جوه الـ div اللي اتضغط عليه
+            var imgPath = element.querySelector('img').getAttribute('src');
+            var lightbox = document.getElementById('lightbox');
+            var lightboxImg = document.getElementById('lightbox-img');
+            
+            lightboxImg.src = imgPath; // بيحط الرابط في الصورة الكبيرة
+            lightbox.classList.add('active'); // بيظهر النافذة
+        }
+    </script>
+</body>
+</html>
